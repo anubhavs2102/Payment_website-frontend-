@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharge Your Phone with E-Pay</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 100px 100px rgb(197, 101, 32);
+            padding: 30px;
+            width: 450px; /* Adjusted width for better readability on various devices */
+            margin: 0 auto; /* Center the container horizontally */
+        }
+        
+        header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            margin-left: 80px;
+            margin-right: -50px;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin-right: 10px; /* Space between logo and text */
+            color: rgb(197, 101, 32);
+        }
+        
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 90%;
+            max-height: 90%;
+        }
+        
+        main {
+            margin-bottom: 20px;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        fieldset {
+            border: 1px solid rgb(255, 106, 0);
+            border-radius: 3px;
+            padding: 10px;
+            width: 100%; /* Make fieldsets full width */
+        }
+        
+        legend {
+            font-weight: bold;
+            padding: 5px;
+            color: rgb(197, 101, 32);
+        }
+        
+        label {
+            color: rgb(197, 101, 32);
+            font-weight: bold;
+            margin-bottom: 1000px; /* Add space between label and input */
+        }
+        
+        input[type="tel"], input[type="number"], input[type="password"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 90%; /* Make inputs full width */
+        }
+        
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 95%; /* Make select elements full width */
+        }
+        
+        button[type="submit"] {
+            background-color: rgb(197, 101, 32); /* Green color for submit button */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: rgb(255, 106, 0); /* Darker green on hover */
+        }
+
+        
+        
+    </style>
+</head>
+<body>
+    <header class="recharge">
+        <img src="./assets/recharge2.png" alt="" width="700" height="700">
+    </header>
+    <div class="container">
+        <header class="section-1-logo">
+            <h1><img src="./assets/paytm_logo.png" alt="Mobile Recharge Logo"> <br>Recharge Your Phone</h1>
+        </header>
+        <main>
+            <form id="recharge-form">
+                <fieldset>
+                    <legend>Choose Your Operator:</legend>
+                    <select name="operator" id="operator"required>
+                        <option value="">Select Operator</option>
+                        <option value="JIO">JIO</option>
+                        <option value="BSNL">BSNL</option>
+                        <option value="VI">VI</option>
+                        <option value="AIRTEL">AIRTEL</option>
+                    </select>
+                </fieldset>
+                <fieldset>
+                    <legend>Enter Your Mobile Number:</legend>
+                    <input type="tel" id="number" name="number" placeholder="Enter your 10-digit mobile number" required>
+                </fieldset>
+                <fieldset id="plan-fieldset">
+                    <legend>Select Recharge Plan (or enter custom amount):</legend>
+                    <select name="amount" id="amount" required>
+                        <option value="">Select Plan</option>
+                    </select>
+                    <br>
+                    <br>
+                    <label for="custom-amount">Custom Amount (Optional):</label>
+                    <input type="number" id="custom-amount" name="custom-amount" min="1" placeholder="Enter custom recharge amount">
+                </fieldset>
+                <fieldset>
+                    <legend>Enter Password:</legend>
+                    <input type="password" id="password" name="password" minlength="8" required>
+                </fieldset>
+                <button type="submit">Recharge Now!</button>
+            </form>
+            <div id="message"></div>
+        </main>
+        <footer>
+            <p style="text-align: center; color: black; font-size: 20px;">&copy; 2024 Recharge Me - Stay Connected!</p>
+        </footer>
+    </div>
+    <script>
+        const form = document.getElementById('recharge-form');
+        const messageEl = document.getElementById('message');
+        const amountSelect = document.getElementById('amount');
+        const planFieldset = document.getElementById('plan-fieldset');
+
+        const plans = {
+          JIO: [
+            { value: '100', text: '₹100 (Talktime)' },
+            { value: '255', text: '₹255 (1.5GB/Day + Unlimited Calls)' },
+            { value: '399', text: '₹399 (2.5GB/Day + Unlimited Calls)' },
+          ],
+          BSNL: [
+            { value: '149', text: '₹149 (50GB + Unlimited Calls)' },
+            { value: '249', text: '₹249 (100GB + Unlimited Calls)' },
+            { value: '399', text: '₹399 (Unlimited Calls + Data Rollover)' },
+          ],
+          VI: [
+            { value: '199', text: '₹199 (1.5GB/Day + Unlimited Calls)' },
+            { value: '299', text: '₹299 (2GB/Day + Unlimited Calls + Hotstar)' },
+            { value: '399', text: '₹399 (3.5GB/Day + Unlimited Calls + Disney+ Hotstar)' },
+          ],
+          AITTEL: [
+            { value: '249', text: '₹249 (2GB/Day + Unlimited Calls)' },
+            { value: '349', text: '₹349 (3GB/Day + Unlimited Calls + Netflix)' },
+            { value: '448', text: '₹448 (Unlimited Calls + Data Rollover + Amazon Prime)' },
+          ],
+        };
+
+        // Update plan options on operator change (initial call to populate plans on load)
+        updatePlanOptions();
+
+        form.addEventListener('change', (event) => {
+          if (event.target === form.operator) {
+            updatePlanOptions();
+          }
+        });
+
+        function updatePlanOptions() {
+          const selectedOperator = form.operator.value;
+          amountSelect.innerHTML = ''; // Clear existing options
+
+          if (selectedOperator) {
+            plans[selectedOperator].forEach((plan) => {
+              const option = document.createElement('option');
+              option.value = plan.value;
+              option.textContent = plan.text;
+              amountSelect.appendChild(option);
+            });
+          }
+
+          // Show the plan fieldset after updating options
+          planFieldset.style.display = 'block';
+        }
+
+        form.addEventListener('submit', (event) => {
+          event.preventDefault(); // Prevent default form submission
+
+          const operator = document.getElementById('operator').value;
+          const number = document.getElementById('number').value;
+          const selectedAmount = document.getElementById('amount').value;
+          const customAmount = document.getElementById('custom-amount').value;
+          const password = document.getElementById('password').value;
+
+          // Simulate successful recharge (replace with actual payment processing logic)
+          if (password !== '12345678') {
+            messageEl.textContent = 'Wrong Password!';
+            messageEl.style.color = 'red';
+            return; // Exit if password is incorrect
+          }
+
+          let rechargeAmount;
+          if (selectedAmount) {
+            rechargeAmount = selectedAmount;
+          } else if (customAmount) {
+            rechargeAmount = customAmount;
+          } else {
+            messageEl.textContent = 'Please select a plan or enter a custom amount.';
+            return; // Exit if no amount is selected
+          }
+
+          messageEl.textContent = `Recharge successful! ₹${rechargeAmount} recharged for ${operator} on ${number}`;
+          messageEl.style.color = 'rgb(255, 106, 0)';
+
+          // Clear form fields after successful recharge (optional)
+          // form.reset(); // Uncomment to clear fields
+        });
+
+    </script>
+</body>
+</html>

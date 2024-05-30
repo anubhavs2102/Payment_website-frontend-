@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up/Sign In</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+        
+        .form-container {
+            margin-bottom: 20px;
+        }
+        
+        .form {
+            display: none;
+        }
+        
+        .form.active {
+            display: block;
+        }
+        
+        input {
+            width: 96%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        button[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: rgb(197, 101, 32);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        #forgot-password {
+            display: block;
+            margin-top: 10px;
+            color: rgb(197, 101, 32);
+            text-decoration: none;
+        }
+        
+        .toggle-container {
+            margin-top: 20px;
+        }
+        
+        .toggle-btn {
+            background-color: rgb(197, 101, 32);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .toggle-btn:hover{
+            background-color: rgb(255, 106, 0);
+        }
+        
+        #open-database-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #00baf2;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        h2{
+            color: rgb(197, 101, 32);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h2>Login with your account</h2>
+            <p>By signing in, you agree to our <a href="#">privacy policy</a> and <a href="#">Terms of use</a>.</p>
+            <div class="toggle-container">
+                <button class="toggle-btn" data-form="signup">Create an Account</button>
+            </div>
+        </div>
+        <div>
+            <form id="signin-form" class="form">
+                <input type="text" id="email-mobile" placeholder="Enter Email or Mobile" required>
+                <input type="password" id="password" placeholder="Enter Password" required>
+                <button type="submit">Sign In Securely</button>
+                <a href="#" id="forgot-password">Forgot Password</a>
+            </form>
+            <form id="signup-form" class="form">
+                <input type="text" id="name" placeholder="Name" required>
+                <input type="text" id="signup-email-mobile" placeholder="Enter Email or Mobile" required>
+                <input type="password" id="signup-password" placeholder="Enter Password" required>
+                <button type="submit">Sign Up</button>
+            </form>
+        </div>
+        <!-- <button id="open-database-btn">Open Database</button> -->
+    </div>
+    <script>
+        // Toggle between Sign Up and Sign In forms
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const signInForm = document.getElementById('signin-form');
+        const signUpForm = document.getElementById('signup-form');
+
+        toggleBtn.addEventListener('click', () => {
+            signInForm.classList.toggle('active');
+            signUpForm.classList.toggle('active');
+        });
+
+        // Sign In functionality
+        const signInSubmitBtn = signInForm.querySelector('button[type="submit"]');
+        const emailMobileInput = document.getElementById('email-mobile');
+        const passwordInput = document.getElementById('password');
+
+        signInSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const emailMobile = emailMobileInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(user => (user.emailMobile === emailMobile && user.password === password));
+
+            if (user) {
+                window.location.assign("index.html");
+                alert('Sign In Successful!');
+            } else {
+                alert('Invalid credentials!');
+            }
+        });
+
+        // Sign Up functionality
+        const signUpSubmitBtn = signUpForm.querySelector('button[type="submit"]');
+        const nameInput = document.getElementById('name');
+        const signUpEmailMobileInput = document.getElementById('signup-email-mobile');
+        const signUpPasswordInput = document.getElementById('signup-password');
+
+        signUpSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const name = nameInput.value.trim();
+            const emailMobile = signUpEmailMobileInput.value.trim();
+            const password = signUpPasswordInput.value.trim();
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const existingUser = users.find(user => user.emailMobile === emailMobile);
+
+            if (existingUser) {
+                alert('User with this email/mobile already exists!');
+            } else {
+                users.push({ name, emailMobile, password });
+                localStorage.setItem('users', JSON.stringify(users));
+                alert('Sign Up Successful!');
+            }
+        });
+
+        // Open Database
+        const openDatabaseBtn = document.getElementById('open-database-btn');
+
+        openDatabaseBtn.addEventListener('click', () => {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const databaseWindow = window.open('', 'Database', 'width=400,height=400');
+            databaseWindow.document.write('<h2>Database</h2>');
+            databaseWindow.document.write('<table>');
+            databaseWindow.document.write('<tr><th>Name</th><th>Email/Mobile</th><th>Password</th></tr>');
+            users.forEach(user => {
+                databaseWindow.document.write(`<tr><td>${user.name}</td><td>${user.emailMobile}</td><td>${user.password}</td></tr>`);
+            });
+            databaseWindow.document.write('</table>');
+});
+    </script>
+</body>
+</html>

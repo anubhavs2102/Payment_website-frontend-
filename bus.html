@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bus Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f6f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: rgb(255, 106, 0);
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        header img{
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 42px;
+        }
+
+        #form {
+            width: 400px;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 100px rgb(197, 101, 32);
+            margin-left: 200px;
+            margin-top: 100px;
+        }
+
+        .div1{
+            display: flex;
+        }
+
+        .img img{
+            margin-top: 100px;
+            margin-left: 150px;
+        }
+
+        #form label {
+            font-weight: bold;
+        }
+
+        #form input[type="text"],
+        #form input[type="date"],
+        #form button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 95%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #form button{
+            width: 100%;
+            background-color: rgb(197, 101, 32);
+        }
+
+        #form button:hover{
+            background-color: rgb(255, 106, 0);
+        }
+
+        #buses,
+        #seats,
+        #password,
+        #confirmation {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 150px;
+        }
+
+        #bus-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #bus-list li {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        #bus-list button {
+            padding: 5px 10px;
+            margin-left: 78%;
+            background-color: rgb(197, 101, 32);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #bus-list button:hover {
+            background-color: rgb(255, 106, 0);
+        }
+
+        #seat-map {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .seat {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            background-color: #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .seat.selected {
+            background-color: rgb(255, 106, 0);
+            color: white;
+          }
+
+        #password-.div2 input {
+            margin-bottom: 10px;
+            padding: 0 10px;
+        }
+
+        #confirmation {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: rgb(255, 106, 0);
+        }
+
+        .div2{
+            display: flex;
+        }
+
+        .div2 p{
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .btn{
+            padding: -5px;
+            background-color: rgb(197, 101, 32);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+        .btn:hover{
+            background-color: rgb(255, 106, 0);
+        }
+
+        #password-input {
+            width: 10%;
+            padding: 0 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            margin-top: 15px;
+            margin-left: 20px;
+        }
+        
+        #password button {
+            width: 10%;
+            padding: 10px;
+            background-color: rgb(197, 101, 32);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            margin-top: 15px;
+            margin-left: 20px;
+        }
+        
+        #password button:hover {
+            background-color: rgb(255, 106, 0);
+        }
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1><img src="./assets/paytm_logo.png" alt="" height="30" width="100"> Bus Booking</h1>
+    </header>
+    <div class="div1">
+        <div id="form">
+            <label for="source">Source:</label>
+            <input type="text" id="source" placeholder="Enter source" required>
+            <label for="destination">Destination:</label>
+            <input type="text" id="destination" placeholder="Enter destination" required>
+            <label for="date">Date of Travel:</label>
+            <input type="date" id="date" required>
+            <button onclick="showBuses()">Search Buses</button>
+        </div>
+        <div class="img">
+            <img src="./assets/bus2.png" alt="" width="600">
+        </div>
+    </div>
+    <div id="buses" style="display:none;">
+        <h2>Select a Bus</h2>
+        <ul id="bus-list"></ul>
+    </div>
+    <div id="seats" style="display:none;">
+        <h2>Select Seat</h2>
+        <div id="seat-map"></div>
+        <div class="div2">
+            <p>Selected Seats: <span id="selected-seats"></span></p>
+            <p>Total Amount: ₹<span id="total-amount">0.00</span></p>
+            <button class="btn" onclick="enterPassword()">Proceed to Book</button>
+        </div>
+    </div>
+    <div id="password" style="display:none;">
+        <div class="div2">
+            <h2>Enter Password</h2>
+            <input type="password" id="password-input" placeholder="Enter password" required><br>
+            <button onclick="bookBus()">Book Bus</button>
+        </div>
+    </div>
+    <div id="confirmation" style="display:none;">
+        <p>Bus Booked Successfully!</p>
+    </div>
+    <script>
+        const buses = [
+            { id: 1, name: 'Red Bus', seats: 20, price: 500 },
+            { id: 2, name: 'Abhi Bus', seats: 15, price: 450 },
+            { id: 3, name: 'Zing Bus', seats: 25, price: 300 }
+        ];
+
+        let selectedBus;
+        let selectedSeats = [];
+
+        function showBuses() {
+            const source = document.getElementById('source').value;
+            const destination = document.getElementById('destination').value;
+            const date = document.getElementById('date').value;
+
+            if (!source || !destination || !date) {
+                alert('Please enter source, destination, and date.');
+                return;
+            }
+
+            // Simulate API call to fetch buses based on source, destination, and date
+            // Here, we are just using a predefined array of buses for demonstration
+            displayBuses(buses);
+        }
+
+        function displayBuses(buses) {
+            const busList = document.getElementById('bus-list');
+            busList.innerHTML = '';
+
+            buses.forEach(bus => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${bus.name} (${ bus.seats } seats) - ₹${ bus.price } /seat`;
+            const selectButton = document.createElement('button');
+            selectButton.textContent = 'Select';
+            selectButton.addEventListener('click', () => selectBus(bus));
+            listItem.appendChild(selectButton);
+            busList.appendChild(listItem);
+        });
+
+        document.getElementById('buses').style.display = 'block';
+}
+
+        function selectBus(bus) {
+            selectedBus = bus;
+            document.getElementById('buses').style.display = 'none';
+            document.getElementById('seats').style.display = 'block';
+
+            const seatMap = document.getElementById('seat-map');
+            seatMap.innerHTML = '';
+
+            for (let i = 1; i <= bus.seats; i++) {
+                const seat = document.createElement('div');
+                seat.className = 'seat';
+                seat.textContent = i;
+                seat.dataset.price = bus.price;
+                seat.addEventListener('click', () => selectSeat(seat));
+                seatMap.appendChild(seat);
+            }
+        }
+
+        function selectSeat(seat) {
+            seat.classList.toggle('selected');
+            const seatNumber = parseInt(seat.textContent);
+            if (selectedSeats.includes(seatNumber)) {
+                selectedSeats = selectedSeats.filter(s => s !== seatNumber);
+            } else {
+                selectedSeats.push(seatNumber);
+            }
+            updateSelectedSeats();
+        }
+
+        function updateSelectedSeats() {
+            const selectedSeatsElement = document.getElementById('selected-seats');
+            const totalAmountElement = document.getElementById('total-amount');
+            selectedSeatsElement.textContent = selectedSeats.join(', ');
+            const totalPrice = selectedSeats.reduce((total, seat) => total + parseFloat(seat.buses.price), 0);
+            totalAmountElement.textContent = totalPrice.toFixed(2);
+        }
+
+        function updateSelectedSeats() {
+            const selectedSeatsElement = document.getElementById('selected-seats');
+            const totalAmountElement = document.getElementById('total-amount');
+            selectedSeatsElement.textContent = selectedSeats.join(', ');
+
+            const totalPrice = selectedSeats.reduce((total, seat) => total + selectedBus.price, 0);
+            totalAmountElement.textContent = totalPrice.toFixed(2);
+        }
+
+
+        function enterPassword() {
+            document.getElementById('seats').style.display = 'none';
+            document.getElementById('password').style.display = 'block';
+        }
+
+        function bookBus() {
+            const password = document.getElementById('password-input').value;
+            if (password !== '12345678') {
+                alert('Incorrect password!');
+                return;
+            }
+            document.getElementById('password').style.display = 'none';
+            document.getElementById('confirmation').style.display = 'block';
+        }
+
+    </script>
+</body>
+
+</html>

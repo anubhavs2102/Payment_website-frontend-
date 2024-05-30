@@ -1,0 +1,333 @@
+<!DOCTYPE html>P<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flight Booking</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    .div img{
+      transform: rotate(90deg);
+      margin-top: 175px;
+      margin-left: -50px;
+      margin-right: -180px;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 10px 100px rgb(197, 101, 32);
+      overflow-y: scroll; /* Add scroll */
+      max-height: 600px;
+      scrollbar-width: 3px;
+    }
+    img{
+      align-items: center;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: rgb(255, 106, 0);
+    }
+    
+    h2 {
+      margin-top: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+      margin-left: 75px;
+    }
+    
+    .class-group{
+      margin-bottom: 15px;
+      margin-left: 128px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+    }
+    
+    input[type="text"],
+    input[type="date"],
+    select,
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    input[type="password"]{
+      width: 40%;
+    }
+
+    input[type="date"]{
+      width: 140%;
+    }
+
+    select{
+      width: 194%;
+    }
+
+    .pass-group label{
+      display: inline-block;
+    }
+
+    input[type="number"]{
+      width: 20%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+    }
+    
+    button {
+      padding: 10px 20px;
+      background-color: rgb(255, 106, 0);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background-color: rgb(197, 101, 32);
+    }
+
+    .button-group{
+      display: flex;
+      align-items: center;
+      margin-left: 40%;
+      margin-top: 10px;
+    }
+    
+    #flightsList {
+      margin-top: 20px;
+    }
+    
+    .flight {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .flight p {
+      margin: 5px 0;
+    }
+    
+    .div1{
+      display: flex;
+      flex-direction: row;
+    }
+
+    .div2{
+      display: flex;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="div">
+    <img src="./assets/plane.png" alt="" height="350">
+  </div>
+  <div class="container">
+    <h1><img src="./assets/paytm_logo.png" alt=""> Flight Booking</h1>
+    <form id="bookingForm">
+      <div class="div1">
+        <div class="form-group">
+          <label for="origin">Origin:</label>
+          <input type="text" id="origin" name="origin" required>
+        </div>
+        <div class="form-group">
+          <label for="destination">Destination:</label>
+          <input type="text" id="destination" name="destination" required>
+        </div>
+      </div>
+      <div class="div1">
+        <div class="form-group">
+          <label for="date">Date:</label>
+          <input type="date" id="date" name="date" required>
+        </div>
+        <div class="class-group">
+          <label for="class">Class:</label>
+          <select id="class" name="class">
+            <option value="economy">Economy</option>
+            <option value="business">Business</option>
+            <option value="first">First Class</option>
+          </select>
+        </div>
+      </div>
+      <div class="button-group">
+        <button type="submit">Search Flights</button>
+      </div>
+    </form>
+    <div id="flightsList"></div>
+    <div id="bookingDetails" style="display: none;">
+      <h2>Passenger Details</h2>
+      <div class="div2">
+        <form id="passengerForm">
+          <div class="pass-group">
+            <label for="passengerCount">Number of Passengers:</label>
+            <input type="number" id="passengerCount" name="passengerCount" min="1" required>
+            <button type="button" id="calculateAmount">Calculate Amount</button>
+          </div>
+          <div id="passengerDetails"></div>
+        </form>
+      </div>
+    </div>
+    <div id="paymentDetails" style="display: none;">
+      <h2>Payment Details</h2>
+      <form id="paymentForm">
+        <div class="form-group">
+          <label for="password">Enter Password:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <div class="form-group">
+          <button type="button" id="bookFlight">Book Flight</button>
+        </div>
+      </form>
+      <div id="message"></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('bookingForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+    
+      const origin = document.getElementById('origin').value;
+      const destination = document.getElementById('destination').value;
+      const date = document.getElementById('date').value;
+      const flightClass = document.getElementById('class').value;
+    
+      // Simulated flight data, you can replace this with actual data fetched from a server
+      const flights = [
+        { origin: 'Delhi', destination: 'Mumbai', date: '2024-05-07', time: '10:00 AM', price: { economy: 6000, business: 30000, first: 40000 } },
+        { origin: 'Delhi', destination: 'Mumbai', date: '2024-05-07', time: '02:00 PM', price: { economy: 5000, business: 35000, first: 45000 } },
+        { origin: 'Delhi', destination: 'Lucknow', date: '2024-05-07', time: '12:00 AM', price: { economy: 7000, business: 40000, first: 48000 } },
+        { origin: 'Delhi', destination: 'Lucknow', date: '2024-05-07', time: '10:00 AM', price: { economy: 9000, business: 30000, first: 40000 } },
+        { origin: 'Delhi', destination: 'Jaipur', date: '2024-05-07', time: '11:00 AM', price: { economy: 6000, business: 34000, first: 47000 } },
+        { origin: 'Delhi', destination: 'Ayodhya', date: '2024-05-07', time: '03:00 PM', price: { economy: 5000, business: 30000, first: 40000 } },
+        { origin: 'Mumbai', destination: 'Delhi', date: '2024-05-07', time: '10:00 AM', price: { economy: 700, business: 35000, first: 45000 } },
+        { origin: 'Mumbai', destination: 'Delhi', date: '2024-05-07', time: '10:00 AM', price: { economy: 8000, business: 30000, first: 40000 } },
+        { origin: 'Mumbai', destination: 'Bengluru', date: '2024-05-07', time: '12:00 AM', price: { economy: 5000, business: 37000, first: 46000 } },
+        { origin: 'Mumbai', destination: 'Bengluru', date: '2024-05-07', time: '10:00 AM', price: { economy: 6000, business: 34000, f1rst: 42000 } },
+        { origin: 'Mumbai', destination: 'Ayodhya', date: '2024-05-07', time: '03:00 PM', price: { economy: 9000, business: 30000, first: 40000 } },
+        { origin: 'Mumbai', destination: 'Lucknow', date: '2024-05-07', time: '10:00 AM', price: { economy: 10000, business: 38000, first: 41000 } },
+        { origin: 'Bengluru', destination: 'Delhi', date: '2024-05-07', time: '12:00 PM', price: { economy: 4000, business: 35000, first: 44000 } },
+        { origin: 'Bengluru', destination: 'Delhi', date: '2024-05-07', time: '10:00 AM', price: { economy: 10000, business: 23000, first: 34000 } },
+        { origin: 'Bengluru', destination: 'Mumbai', date: '2024-05-07', time: '03:00 AM', price: { economy: 8000, business: 36000, first: 45000 } },
+        { origin: 'Bengluru', destination: 'Mumbai', date: '2024-05-07', time: '12:00 PM', price: { economy: 5000, business: 39000, first: 49000 } },
+        { origin: 'Bengluru', destination: 'Lucknow', date: '2024-05-07', time: '10:00 AM', price: { economy: 3000, business: 24000, first: 36000 } },
+        { origin: 'Bengluru', destination: 'Lucknow', date: '2024-05-07', time: '10:00 PM', price: { economy: 6000, business: 37000, first: 43000 } },
+        { origin: 'Lucknow', destination: 'Mumbai', date: '2024-05-07', time: '11:00 AM', price: { economy: 7000, business: 35000, first: 45000 } },
+        { origin: 'Lucknow', destination: 'Mumbai', date: '2024-05-07', time: '10:00 AM', price: { economy: 8000, business: 36000, first: 46000 } },
+        { origin: 'Lucknow', destination: 'Delhi', date: '2024-05-07', time: '12:00PPM', price: { economy: 4000, business: 34000, first: 44000 } },
+        { origin: 'Lucknow', destination: 'Delhi', date: '2024-05-07', time: '03:00 AM', price: { economy: 5000, business: 35000, first: 45000 } },
+        { origin: 'Lucknow', destination: 'Ayoghya', date: '2024-05-07', time: '12:00 AM', price: { economy: 6000, business: 36000, first: 46000 } },
+        { origin: 'Lucknow', destination: 'Gorakhpur', date: '2024-05-07', time: '10:00 AM', price: { economy: 7000, business: 37000, first: 47000 } },
+        { origin: 'Jaipur', destination: 'Delhi', date: '2024-05-07', time: '10:00 AM', price: {economy: 8000, business: 38000, first: 48000 } },
+        { origin: 'Jaipur', destination: 'Delhi', date: '2024-05-07', time: '10:00 PM', price: { economy: 9000, business: 39000, first: 49000 } },
+        { origin: 'Jaipur', destination: 'Mumbai', date: '2024-05-07', time: '12:00 AM', price: { economy: 4000, business: 34000, first: 44000 } },
+        { origin: 'Jaipur', destination: 'Mumbai', date: '2024-05-07', time: '10:00 AM', price: { economy: 5000, business: 35000, first: 45000 } },
+        { origin: 'Jaipur', destination: 'Chennai', date: '2024-05-07', time: '10:00 AM', price: { economy: 6000, business: 36000, first: 46000 } },
+        { origin: 'Jaipur', destination: 'Chennai', date: '2024-05-07', time: '10:00 PM', price: { economy: 7000, business: 37000, first: 47000 } },
+        { origin: 'Chennai', destination: 'Mumbai', date: '2024-05-07', time: '12:00 AM', price: { economy: 8000, business: 38000, first: 48000 } },
+        { origin: 'Chennai', destination: 'Mumbai', date: '2024-05-07', time: '10:00 AM', price: { economy: 9000, business: 39000, first: 49000 } },
+        { origin: 'Chennai', destination: 'Delhi', date: '2024-05-07', time: '11:00 PM', price: { economy: 10000, business: 30000, first: 40000 } },
+        { origin: 'Chennai', destination: 'Delhi', date: '2024-05-07', time: '06:00 PM', price: { economy: 8000, business: 28000, first: 38000 } }
+      ];
+    
+      const filteredFlights = flights.filter(flight => flight.origin.toLowerCase() === origin.toLowerCase() && flight.destination.toLowerCase() === destination.toLowerCase() && flight.date === date);
+    
+      const flightsList = document.getElementById('flightsList');
+      flightsList.innerHTML = '';
+    
+      if (filteredFlights.length > 0) {
+        filteredFlights.forEach(flight => {
+          const flightDiv = document.createElement('div');
+          flightDiv.classList.add('flight');
+          flightDiv.innerHTML = `
+            <p><strong>Origin:</strong> ${flight.origin}</p>
+            <p><strong>Destination:</strong> ${flight.destination}</p>
+            <p><strong>Date:</strong> ${flight.date}</p>
+            <p><strong>Time:</strong> ${flight.time}</p>
+            <p><strong>Price (${flightClass}):</strong> ₹${flight.price[flightClass]}</p>
+            <button onclick="selectFlight('${flight.origin}', '${flight.destination}', '${flight.date}', '${flight.time}', '${flight.price[flightClass]}')">Select</button>
+          `;
+          flightsList.appendChild(flightDiv);
+        });
+      } else {
+        flightsList.innerHTML = '<p>No flights found</p>';
+      }
+    });
+    
+    function selectFlight(origin, destination, date, time, price) {
+      const bookingDetails = document.getElementById('bookingDetails');
+      bookingDetails.style.display = 'block';
+    
+      document.getElementById('calculateAmount').addEventListener('click', function () {
+        const passengerCount = parseInt(document.getElementById('passengerCount').value);
+        const classSelected = document.getElementById('class').value;
+        const amount = price * passengerCount;
+    
+        const passengerDetails = document.getElementById('passengerDetails');
+        passengerDetails.innerHTML = '';
+        for (let i = 1; i <= passengerCount; i++) {
+          const passengerDiv = document.createElement('div');
+          passengerDiv.classList.add('form-group');
+          passengerDiv.innerHTML = `
+          <h3 >Passenger ${i}</h3>
+          <div style="display: flex; align-items: center; margin-bottom: 10px;">
+            <label for="name${i}" style="flex: 1; margin-right: 10px;">Name:</label>
+            <input type="text" id="name${i}" name="name${i}" required style="flex: 5;">
+          </div>
+          <div style="display: flex; align-items: center;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+              <label for="age${i}" style="flex: 1; margin-right: 10px;">Age:</label>
+              <input type="number" id="age${i}" name="age${i}" required style="flex: 2; margin-left:2px;">
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 10px; margin-left:70px;">
+              <label for="seat${i}" style="flex: 1; margin-right: 10px;">Seat:</label>
+              <select id="seat${i}" name="seat${i}" required style="flex: 2;">
+                <option value="aisle">Aisle</option>
+                <option value="window">Window</option>
+                <option value="middle">Middle</option>
+              </select>
+            </div>
+          </div>
+          `;
+          passengerDetails.appendChild(passengerDiv);
+        }
+    
+        const amountDiv = document.createElement('div');
+        amountDiv.innerHTML = `<h3>Total Amount: ₹${amount}</h3>`;
+        passengerDetails.appendChild(amountDiv);
+    
+        const paymentDetails = document.getElementById('paymentDetails');
+        paymentDetails.style.display = 'block';
+      });
+    }
+    
+    document.getElementById('bookFlight').addEventListener('click', function () {
+      const password = document.getElementById('password').value;
+    
+      if (password === '12345678') {
+          alert('Flight Booked Successfully!!!!');
+      } else {
+        alert('Incorrect Password. Please try again.');
+      }
+    });  
+  </script>
+</body>
+</html>
